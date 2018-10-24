@@ -1,0 +1,23 @@
+version: '3'
+services:
+
+  # DB for the INNUENDO application.
+  db_insaflu:
+    image: postgres:9.5
+    restart: always
+    environment:
+      POSTGRES_USER: "flu_user"
+      POSTGRES_PASSWORD: "flu_user"
+      POSTGRES_DB: "flu"
+
+  # Service for FlowCraft inspect application
+  insaflu:
+    image: test_flu:latest
+    restart: on-failure
+    volumes:
+      - ./configs/insaflu.env:/NGStools/INSaFLU/.env
+    depends_on:
+      - "db_insaflu"
+    ports:
+      - "80:80"
+    command: ["init_all"]
